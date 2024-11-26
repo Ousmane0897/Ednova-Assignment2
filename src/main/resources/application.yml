@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/health  # MongoDB connection URI
+      username: root  # MongoDB root user
+      password: Ousmane1997  # MongoDB password
+
+server:
+  port: 8080  # Spring Boot app will run on port 8080

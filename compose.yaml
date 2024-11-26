@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Spring Boot Application
+  app:  # The Spring Boot application container
+    image: springbootdocker
+    container_name: springboot-app
+    ports:
+      - "8080:8080"
+    depends_on:  # The Spring Boot app will start only after MongoDB is ready
+      - mongo
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/health
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=Ousmane1997
+    networks:
+      - app-network
+
+  # MongoDB Service
+  mongo:  # The MongoDB container
+    image: mongo:latest
+    container_name: mongo-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Ousmane1997
+      MONGO_INITDB_DATABASE: health
+    ports:
+      - "27017:27017"
+    volumes:  # We use the mongo-data volume to persist MongoDB data outside the container
+      - mongo-data:/data/health
+    networks:  # We define a custom network app-network to allow both the Spring Boot app and MongoDB container to communicate with each other.
+      - app-network
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:  # We define a custom network app-network to allow both the Spring Boot app and MongoDB container to communicate with each other.
+  app-network:
+    driver: bridge
